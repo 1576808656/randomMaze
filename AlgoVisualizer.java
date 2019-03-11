@@ -29,7 +29,6 @@ public class AlgoVisualizer {
 	}
 	
 	public void run() {
-	//	Stack<Position>stack = new ArrayStack<>();
 		RandomQueue<Position> queue = new RandomQueue<>();
 		Position p = new Position(data.getEntranceX(),data.getEntranceY()+1);
 		queue.enqueue(p);

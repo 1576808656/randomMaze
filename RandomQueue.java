@@ -4,24 +4,31 @@ import mazeSolve.Array;
 import mazeSolve.Queue;
 
 public class RandomQueue<E> implements Queue<E> {
-	private Array<E> array;
+	private LinkedList<E> array;
 	public RandomQueue() {
-		array = new Array<>();
+		array = new LinkedList<>();
 	}
 	@Override
 	public void enqueue(E e) {
-		array.add(e);
+		int random = (int)(Math.random()*2);
+		if(random == 0)
+			array.addLast(e);
+		else
+			array.addFirst(e);
 		
 	}
 	@Override
 	public E dequeue() {
-		if(array.getSize() == 0)
-			throw new IllegalArgumentException("There's no element to remove in Random");
-		int random = (int)(Math.random()*array.getSize());
-		E e = array.get(random);
-		array.set(random, array.getLast());
-		array.removeLast();
-		return e;
+//		if(array.getSize() == 0)
+//			throw new IllegalArgumentException("There's no element to remove in Random");
+//		int random = (int)(Math.random()*array.getSize());
+//		E e = array.get(random);
+//		array.set(random, array.getLast());
+//		array.removeLast();
+		if(Math.random() < 0.5)
+			return array.removeLast();
+		else
+			return array.removeFirst();
 	}
 	@Override
 	public E getFront() {
