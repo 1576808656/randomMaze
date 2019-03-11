@@ -12,6 +12,7 @@ public class MazeData {
 	public boolean[][] visited;
 	public boolean[][] road;
 	public boolean[][] rightRoad;	//ÕæµÄÂ·
+	public boolean[][] inMist;
 	public int getN() {
 		return N;
 	}
@@ -48,6 +49,7 @@ public class MazeData {
 		visited = new boolean[N][M];
 		road = new boolean[N][M];
 		rightRoad = new boolean[N][M];
+		inMist = new boolean[N][M];
 		this.entranceX = 1;
 		this.entranceY = 0;
 		this.exitX = N-2;
@@ -60,7 +62,9 @@ public class MazeData {
 					maze[i][j] = ROAD;
 				else
 					maze[i][j] = WALL;
+				
 				visited[i][j] = false;
+				inMist[i][j] = true;
 			}
 		}
 		maze[entranceX][entranceY] = ROAD;

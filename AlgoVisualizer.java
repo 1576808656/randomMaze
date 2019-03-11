@@ -6,7 +6,7 @@ import mazeSolve.Queue;
 
 public class AlgoVisualizer {
 	private static int blockSide = 5;
-	private static final int d[][] = {{1,0},{0,1},{-1,0},{0,-1}};
+	private static final int d[][] = {{1,0},{0,1},{-1,0},{0,-1},{-1,-1},{1,-1},{-1,1},{1,1}};
 	private MazeData data;
 	private AlgoFrame frame;
 	private static int DELAY = 1;
@@ -34,7 +34,7 @@ public class AlgoVisualizer {
 		Position p = new Position(data.getEntranceX(),data.getEntranceY()+1);
 		queue.enqueue(p);
 		data.visited[p.getX()][p.getY()] = true;
-		
+		dispel(p.getX(),p.getY());
 		while(queue.getSize() != 0) {
 			Position position = queue.dequeue();
 			for(int i=0;i<4;i++) {
@@ -43,7 +43,7 @@ public class AlgoVisualizer {
 				if(data.inArea(newX, newY) && !data.visited[newX][newY]) {
 					queue.enqueue(new Position(newX,newY,position));
 					data.visited[newX][newY] = true;
-				//	road[newX][newY] = true;
+					dispel(newX,newY);
 					setData(position.getX()+d[i][0],position.getY()+d[i][1]);
 				}
 				
@@ -52,32 +52,37 @@ public class AlgoVisualizer {
 		searchRoad(data.getEntranceX(),data.getEntranceY());
 		setData(-1,-1);
 	}
+	//ÇýÉ¢ÃÔÎí
+	private void dispel(int x,int y) {
+		if(!data.inArea(x,y))
+			throw new IllegalArgumentException("x or y is out of index in dispel");
+
+		for(int i=x-1;i<=x+1;i++) {
+			for(int j=y-1;j<=y+1;j++)
+				data.inMist[i][j] = false;
+		}
+	}
 	
 	public void searchRoad(int x,int y) {
 		Position p = new Position(x,y);
 		queueR.enqueue(p);
 	//	setData(x,y,true);
-		int n = 0;
 		int newX = 0;
 		int newY = 0;
 		while(queueR.getSize() != 0) {
-			n = 0;
 			Position position = queueR.dequeue();
 			if(position.getX() == data.getExitX() && position.getY() == data.getExitY()) {
 				cur = position;
 			}
-				
 			for(int i=0;i<4;i++) {
 				newX = position.getX()+d[i][0];
 				newY = position.getY()+d[i][1];
 				if(data.inArea(newX, newY) && !data.road[newX][newY] && data.maze[newX][newY] == ' ') {
 					queueR.enqueue(new Position(newX,newY,position));
 					data.road[newX][newY] = true;
-					n++;
 				}
 			}
-//			if(n == 0)
-//				queueR.dequeue();
+
 		}
 		while(cur.getPrev() != null) {
 			setData(cur.getX(),cur.getY(),true);
@@ -107,6 +112,11 @@ public class AlgoVisualizer {
 	private void setData(int x,int y) {
 		if(data.inArea(x, y))
 			data.maze[x][y] = MazeData.ROAD;
+		frame.render(data);
+		AlgoVisHelper.pause(DELAY);
+	}
+	
+	private void setData() {
 		frame.render(data);
 		AlgoVisHelper.pause(DELAY);
 	}
